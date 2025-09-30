@@ -54,18 +54,26 @@ export default function Calendar() {
 
       {/* Dates Grid */}
       <div className="grid grid-cols-7 gap-2">
-        {exampleDates.map((d) => (
-          <div
-            key={d.date}
-            className={`h-10 flex justify-center items-center rounded border text-base font-medium transition ${
-              d.date === today
-                ? "border-2 border-black bg-gradient-to-br from-blue-200 to-blue-400 font-bold text-blue-900 shadow"
-                : statusClasses[d.status]
-            }`}
-          >
-            {d.date}
-          </div>
-        ))}
+        {exampleDates.map((d, i) => {
+          const dayOfWeek = i % 7; // 0 = Sunday, 6 = Saturday
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+          return (
+            <div
+              key={d.date}
+              className={`h-10 flex justify-center items-center rounded border text-base font-medium transition 
+                ${
+                  d.date === today
+                    ? "border-2 border-black bg-gradient-to-br from-blue-200 to-blue-400 font-bold text-blue-900 shadow"
+                    : isWeekend
+                    ? "bg-yellow-200 text-yellow-800 border-yellow-400 font-bold"
+                    : statusClasses[d.status]
+                }`}
+            >
+              {d.date}
+            </div>
+          );
+        })}
       </div>
 
       {/* Summary */}
@@ -80,7 +88,7 @@ export default function Calendar() {
         </div>
         <div className="flex items-center gap-2 p-2">
           <span className="w-4 h-4 rounded-full bg-gradient-to-br from-yellow-200 to-yellow-400 inline-block"></span>
-          Holiday
+          Holiday / Weekend
         </div>
         <div className="flex items-center gap-2 p-2">
           <span className="w-4 h-4 rounded-full bg-gradient-to-br from-blue-200 to-blue-400 inline-block"></span>

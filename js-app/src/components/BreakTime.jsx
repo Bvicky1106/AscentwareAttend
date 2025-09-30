@@ -27,7 +27,7 @@ export default function BreakTime() {
   };
 
   return (
-    <div className="flex flex-col rounded-lg p-4">
+    <div className="flex flex-col rounded-lg p-8">
       {/* Header */}
       <div className="flex justify-between items-center font-bold tracking-[0.2px] text-blue-600 text-2xl mb-4">
         <div>Break Time & Counts</div>

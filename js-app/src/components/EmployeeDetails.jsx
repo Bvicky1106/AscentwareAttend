@@ -1,6 +1,6 @@
 export default function EmployeeDetails() {
   return (
-    <div className="flex justify-center items-start h-full w-full">
+    <div className="flex justify-center items-start h-full w-full p-8">
       <div className="rounded-xl text-center flex flex-col items-center justify-center font-sans text-sm w-full max-w-sm shadow-md p-4 bg-white">
         {/* Header */}
         <h2 className="text-2xl font-bold text-blue-600 mb-4 tracking-wide">
@@ -19,7 +19,7 @@ export default function EmployeeDetails() {
         {/* Employee Info */}
         <div className="text-left w-full px-4 space-y-1 text-lg">
           <p>
-            <span className="font-semibold">Name:</span> John Doe
+            <span className="font-semibold">Name:</span> Vignesh
           </p>
           <p>
             <span className="font-semibold">Role:</span> Software Engineer

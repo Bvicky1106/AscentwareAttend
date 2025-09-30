@@ -1,15 +1,10 @@
 import { PublicClientApplication, LogLevel } from "@azure/msal-browser";
 
-// Load environment variables
-const clientId = process.env.REACT_APP_AZURE_CLIENT_ID;
-const tenantId = process.env.REACT_APP_AZURE_TENANT_ID;
-const redirectUri = process.env.REACT_APP_REDIRECT_URI;
-
 export const msalConfig = {
   auth: {
-    clientId: clientId,
-    authority: `https://login.microsoftonline.com/${tenantId}`,
-    redirectUri: redirectUri,
+    clientId: "GH18Q~YjXuPrUY-q8dSXQ7UvvZ6xJ4tG8Ni2zacS",
+    authority: "https://login.microsoftonline.com/YOUR_TENANT_ID",
+    redirectUri: "http://localhost:3000",
   },
   cache: { cacheLocation: "sessionStorage", storeAuthStateInCookie: false },
   system: {
