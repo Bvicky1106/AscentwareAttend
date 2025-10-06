@@ -5,6 +5,9 @@ import EmpSidebar from "../components/sidebar/EmpSidebar";
 import EmpSidebarItem from "../components/sidebar/EmpSidebarItem";
 import CalendarGrid from "../components/CalendarGrid";
 import WeeklyStatusChart from "../components/WeeklyStatusChart";
+import Admin from "../components/admin/Admin";
+import Calendar from "../components/Calendar";
+import EmployeePopup from "../components/EmployeePopup";
 
 export default function AppRouter() {
   return (
@@ -14,11 +17,15 @@ export default function AppRouter() {
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.SIDEBAR} element={<EmpSidebar />} />
         <Route path={ROUTES.SIDEBARITEM} element={<EmpSidebarItem />} />
+
+        <Route path={ROUTES.CALENDAR} element={<Calendar />} />
         <Route path={ROUTES.CALENDARGRID} element={<CalendarGrid />} />
+        <Route path={ROUTES.EMPLOYEEPOPUP} element={<EmployeePopup />} />
         <Route
           path={ROUTES.WEEKLYSTATUSCHART}
           element={<WeeklyStatusChart />}
         />
+        <Route path={ROUTES.ADMIN} element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );

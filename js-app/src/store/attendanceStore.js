@@ -1,5 +1,7 @@
+// src/store/attendanceStore.js
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import axios from "axios";
 
 export const useAttendanceStore = create(
   persist(
@@ -37,8 +39,39 @@ export const useAttendanceStore = create(
         });
       },
 
-      checkOut: () => {
-        if (get().timerInterval) clearInterval(get().timerInterval);
+      checkOut: async () => {
+        const {
+          startTime,
+          elapsedTime,
+          breakCount,
+          breakElapsed,
+          isCheckedIn,
+          timerInterval,
+        } = get();
+
+        if (!isCheckedIn) return;
+
+        // Stop timer
+        if (timerInterval) clearInterval(timerInterval);
+
+        try {
+          // Prepare data for backend
+          const data = {
+            startTime: new Date(startTime).toISOString(),
+            endTime: new Date().toISOString(),
+            workedDuration: Math.floor(elapsedTime / 1000), // seconds
+            breakCount,
+            totalBreakDuration: Math.floor(breakElapsed / 1000),
+          };
+
+          // Send to NestJS backend
+          await axios.post("http://localhost:8000/attendance", data);
+          console.log("✅ Attendance data sent successfully", data);
+        } catch (error) {
+          console.error("❌ Error sending attendance data:", error);
+        }
+
+        // Reset local state
         set({
           isCheckedIn: false,
           startTime: null,
@@ -55,7 +88,6 @@ export const useAttendanceStore = create(
         if (!get().isCheckedIn) return;
 
         if (get().isOnBreak) {
-          // Resume work → stop break
           const now = Date.now();
           const breakDuration = now - get().breakStart;
           set({
@@ -64,7 +96,6 @@ export const useAttendanceStore = create(
             breakStart: null,
           });
         } else {
-          // Start break
           set({
             isOnBreak: true,
             breakCount: get().breakCount + 1,
@@ -102,7 +133,7 @@ export const useAttendanceStore = create(
       },
     }),
     {
-      name: "attendance-storage", // save in localStorage
+      name: "attendance-storage",
       partialize: (state) => ({
         isCheckedIn: state.isCheckedIn,
         startTime: state.startTime,

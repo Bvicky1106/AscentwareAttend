@@ -4,33 +4,48 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaUserShield,
-  FaCalendarAlt,
   FaTable,
 } from "react-icons/fa";
-import EmpSidebarItem from "../sidebar/EmpSidebarItem";
+import EmpSidebarItem from "./EmpSidebarItem";
+import { ROUTES } from "../../constants/routes";
 
 const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
   const [openPermission, setOpenPermission] = useState(false);
 
+  const permissionItems = [
+    { label: "Leave Request", route: ROUTES.LEAVE },
+    { label: "Corrections Request", route: ROUTES.CORRECTION },
+    { label: "Permission Request", route: ROUTES.PERMISSION },
+    { label: "Check-in Reset Request", route: ROUTES.RESET },
+  ];
+
   return (
     <aside
-      className={`fixed  left-0 h-full w-60 bg-[#0077b6] text-white shadow-lg transition-transform duration-300 z-[900] ${
+      className={`fixed left-0 h-full w-60 bg-[#0077b6] text-white shadow-lg transition-transform duration-300 z-[900] ${
         isOpen ? "translate-x-0" : "-translate-x-60"
       }`}
     >
-      {/* Dashboard */}
+      {/* Calendar */}
       <EmpSidebarItem
         icon={<FaTachometerAlt />}
-        label="Dashboard"
-        onClick={() => onNavigate("dashboard")}
-        active={activePage === "dashboard"}
+        label="dashboard"
+        onClick={() => onNavigate(ROUTES.DASHBOARD)}
+        active={activePage === ROUTES.DASHBOARD}
+      />
+      <EmpSidebarItem
+        icon={<FaTachometerAlt />}
+        label="Calendar"
+        onClick={() => onNavigate(ROUTES.CALENDARGRID)}
+        active={activePage === ROUTES.CALENDARGRID}
       />
 
-      {/* Attendance */}
-      <EmpSidebarItem icon={<FaCalendarAlt />} label="Attendance" />
-
-      {/* Attendance Table */}
-      <EmpSidebarItem icon={<FaTable />} label="Admin" />
+      {/* Admin */}
+      <EmpSidebarItem
+        icon={<FaTable />}
+        label="Admin"
+        onClick={() => onNavigate(ROUTES.ADMIN)}
+        active={activePage === ROUTES.ADMIN}
+      />
 
       {/* Permission Dropdown */}
       <div className="mx-2 mt-3">
@@ -44,24 +59,20 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
           {openPermission ? <FaChevronUp /> : <FaChevronDown />}
         </button>
 
-        {/* Dropdown Items */}
         <div
           className={`bg-gray-100 rounded-lg shadow-md mt-2 overflow-hidden transition-all duration-300 ${
             openPermission ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          {[
-            "Leave Request",
-            "Corrections Request",
-            "Permission Request",
-            "Check-in Reset Request",
-          ].map((item, i) => (
+          {permissionItems.map((item, i) => (
             <div
               key={i}
-              className="text-center px-3 py-2 m-2 rounded-md bg-white text-[#0077b6] text-sm font-medium cursor-pointer hover:bg-blue-50 hover:scale-[1.02] transition"
-              onClick={() => console.log(`${item} clicked`)} // 👉 replace with your handler
+              className={`text-center px-3 py-2 m-2 rounded-md bg-white text-[#0077b6] text-sm font-medium cursor-pointer hover:bg-blue-50 hover:scale-[1.02] transition ${
+                activePage === item.route ? "bg-blue-100 font-bold" : ""
+              }`}
+              onClick={() => onNavigate(item.route)}
             >
-              {item}
+              {item.label}
             </div>
           ))}
         </div>

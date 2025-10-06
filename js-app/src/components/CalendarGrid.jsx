@@ -1,84 +1,100 @@
-import React from "react";
+import React, { useState } from "react";
+import EmployeePopup from "./EmployeePopup";
 
-function CalendarGrid() {
+const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const dummyEmployee = {
+  avatar: "https://via.placeholder.com/80",
+  name: "John Doe",
+  id: "EMP001",
+  department: "IT",
+  role: "Developer",
+  leaves: { earned: 12, pending: 3, used: 5 },
+  metrics: [
+    { label: "Tasks Completed", value: 34 },
+    { label: "Projects", value: 5 },
+  ],
+  attendance: [
+    { date: 1, status: "present" },
+    { date: 2, status: "absent" },
+    { date: 3, status: "halfday" },
+  ],
+};
+
+export default function CalendarGrid() {
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+
+  const currentMonth = "September 2025";
+  const today = new Date().getDate();
+
+  const exampleDates = Array.from({ length: 30 }, (_, i) => {
+    const day = i + 1;
+    let status = "working"; // default
+    if ([6, 7, 13, 14, 20, 21, 27, 28].includes(day)) status = "holiday";
+    if ([2, 9, 16, 23].includes(day)) status = "absent";
+    if ([5, 12, 19, 26].includes(day)) status = "halfday";
+    return { day, status };
+  });
+
+  const statusClasses = {
+    working: "bg-green-400 text-green-800 border-green-500",
+    absent: "bg-red-200 text-red-800 border-red-400",
+    holiday: "bg-yellow-200 text-yellow-800 border-yellow-400",
+    halfday: "bg-blue-200 text-blue-800 border-blue-400",
+  };
+
   return (
-    <div>
-      <main className="emp-content ml-64 p-4 sm:p-6 lg:p-8">
-        <div className="attendance-widget bg-white rounded-xl shadow-md p-6 space-y-6">
-          {/* Calendar Header */}
-          <div className="attendance-header flex items-center justify-between">
-            <button className="text-blue-600 hover:text-blue-800 px-3 py-1 rounded-lg bg-blue-50 transition">
-              ◀
-            </button>
-            <h2 className="attendance-title text-xl font-semibold text-gray-800">
-              September 2025
-            </h2>
-            <button className="text-blue-600 hover:text-blue-800 px-3 py-1 rounded-lg bg-blue-50 transition">
-              ▶
-            </button>
-          </div>
+    <div className="w-full rounded-xl p-4 font-sans bg-white shadow-md">
+      {/* Header */}
+      <div className="flex justify-between items-center bg-gray-100 p-3 rounded-lg border border-indigo-100 mb-4">
+        <h3 className="text-2xl font-bold text-indigo-600 tracking-wide m-0">
+          Attendance Calendar
+        </h3>
+      </div>
 
-          {/* Days Row */}
-          <div className="days-row grid grid-cols-7 text-center text-gray-500 font-medium">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="py-2">
-                {day}
-              </div>
-            ))}
+      {/* Days of Week */}
+      <div className="grid grid-cols-7 gap-2 mb-2">
+        {daysOfWeek.map((day) => (
+          <div
+            key={day}
+            className="text-center font-semibold text-sm bg-teal-50 border border-gray-200 rounded py-1"
+          >
+            {day}
           </div>
+        ))}
+      </div>
 
-          {/* Calendar Grid */}
-          <div className="calendar-grid grid grid-cols-7 gap-2 text-center">
-            {/* Example cells */}
-            {[...Array(30)].map((_, i) => {
-              const day = i + 1;
-              let status = "Absent"; // Change based on your logic
-              if ([6, 7, 13, 14, 20, 21, 27, 28].includes(day))
-                status = "Holiday";
-              const today = day === 30 ? " today" : "";
+      {/* Dates Grid */}
+      <div className="grid grid-cols-7 gap-2">
+        {exampleDates.map((d, i) => {
+          const dayOfWeek = i % 7;
+          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
-              return (
-                <div
-                  key={day}
-                  className={`calendar-cell relative rounded-lg p-2 ${
-                    status === "Absent"
-                      ? "bg-red-100 text-red-700"
-                      : status === "Holiday"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-gray-100 text-gray-700"
-                  } ${today ? "border-2 border-blue-500" : ""}`}
-                  title={status}
-                >
-                  <span className="block font-semibold">{day}</span>
-                  <small className="block text-xs">{status}</small>
-                </div>
-              );
-            })}
-          </div>
+          return (
+            <div
+              key={d.day}
+              onClick={() => setSelectedEmployee(dummyEmployee)}
+              className={`h-10 flex justify-center items-center rounded border text-base font-medium transition cursor-pointer 
+                ${
+                  d.day === today
+                    ? "border-2 border-black bg-gradient-to-br from-blue-200 to-blue-400 font-bold text-blue-900 shadow"
+                    : isWeekend
+                    ? "bg-yellow-200 text-yellow-800 border-yellow-400 font-bold"
+                    : statusClasses[d.status]
+                } hover:scale-105 transform`}
+            >
+              {d.day}
+            </div>
+          );
+        })}
+      </div>
 
-          {/* Legend */}
-          <div className="attendance-legend flex flex-wrap gap-4 mt-4 text-sm">
-            {[
-              { status: "Present", color: "bg-green-500" },
-              { status: "Absent", color: "bg-red-500" },
-              { status: "Holiday", color: "bg-yellow-400" },
-              { status: "Halfday", color: "bg-blue-400" },
-            ].map((item) => (
-              <div
-                key={item.status}
-                className="legend-item flex items-center gap-2"
-              >
-                <div
-                  className={`legend-box w-4 h-4 rounded ${item.color}`}
-                ></div>
-                {item.status}
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
+      {selectedEmployee && (
+        <EmployeePopup
+          employee={selectedEmployee}
+          onClose={() => setSelectedEmployee(null)}
+        />
+      )}
     </div>
   );
 }
-
-export default CalendarGrid;

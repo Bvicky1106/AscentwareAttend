@@ -6,9 +6,13 @@ import BreakTime from "../components/BreakTime";
 import Navbar from "../components/Navbar";
 import EmpSidebar from "../components/sidebar/EmpSidebar";
 import WeeklyStatusChart from "../components/WeeklyStatusChart";
+import Admin from "../components/admin/Admin";
+import { ROUTES } from "../constants/routes";
+import CalendarGrid from "../components/CalendarGrid";
 
 export default function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activePage, setActivePage] = useState(ROUTES.DASHBOARD); // ✅ control content
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -26,7 +30,8 @@ export default function Dashboard() {
         >
           <EmpSidebar
             isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
+            onNavigate={setActivePage} // ✅ update active page
+            activePage={activePage}
           />
         </div>
 
@@ -37,27 +42,69 @@ export default function Dashboard() {
           }`}
         >
           <main className="grid grid-cols-8 gap-6">
-            {/* Employee Details */}
-            <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
-              <EmployeeDetails />
-            </div>
+            {activePage === ROUTES.DASHBOARD && (
+              <>
+                <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
+                  <EmployeeDetails />
+                </div>
+                <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
+                  <BreakTime />
+                </div>
+                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
+                  <TodaySummary />
+                </div>
+                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
+                  <WeeklyStatusChart />
+                </div>
+                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
+                  <CalendarGrid />
+                </div>
+              </>
+            )}
 
-            {/* Break Time */}
-            <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
-              <BreakTime />
-            </div>
+            {activePage === ROUTES.CALENDARGRID && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold">
+                  <CalendarGrid />
+                </h2>
+              </div>
+            )}
 
-            {/* Today Summary */}
-            <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-              <TodaySummary />
-            </div>
+            {activePage === ROUTES.ADMIN && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <Admin />
+              </div>
+            )}
 
-            <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-              <WeeklyStatusChart />
-            </div>
-            <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-              <Calendar />
-            </div>
+            {activePage === ROUTES.LEAVE && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold">Leave Request Page</h2>
+              </div>
+            )}
+
+            {activePage === ROUTES.CORRECTION && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold">
+                  Corrections Request Page
+                </h2>
+              </div>
+            )}
+
+            {activePage === ROUTES.PERMISSION && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold">
+                  Permission Request Page
+                </h2>
+              </div>
+            )}
+
+            {activePage === ROUTES.RESET && (
+              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
+                <h2 className="text-xl font-semibold">
+                  Check-in Reset Request Page
+                </h2>
+              </div>
+            )}
           </main>
         </div>
       </div>
