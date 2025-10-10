@@ -1,6 +1,7 @@
-import { FaBars, FaChevronDown } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { useAttendanceStore } from "../store/attendanceStore";
 import Logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 // Format milliseconds into HH:MM:SS
 function formatTime(ms) {
@@ -14,6 +15,13 @@ function formatTime(ms) {
 export default function Navbar({ onToggleSidebar }) {
   const { isCheckedIn, checkIn, checkOut, elapsedTime, isOnBreak } =
     useAttendanceStore();
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear(); // clear all stored data
+    navigate("/"); // go to login page
+  };
 
   return (
     <nav className="bg-[#0b2c5d] shadow-md fixed w-full top-0 z-50">
@@ -57,9 +65,12 @@ export default function Navbar({ onToggleSidebar }) {
             </button>
           )}
 
-          {/* Dropdown / User menu */}
-          <button className="text-white text-lg px-2 py-2 hover:text-gray-300 focus:outline-none">
-            <FaChevronDown />
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="bg-gray-500 hover:bg-gray-600 text-white font-medium px-4 py-2 rounded-md shadow-md transition-all"
+          >
+            Logout
           </button>
         </div>
       </div>

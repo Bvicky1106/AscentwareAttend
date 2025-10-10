@@ -1,6 +1,6 @@
 //basic example
 export const ROUTES = {
-  DASHBOARD: "/",
+  DASHBOARD: "/dashboard",
   BREAKAPP: "/breakapp",
   BREAKINFO: "/breakinfo",
   SIDEBAR: "/sidebar",
@@ -15,4 +15,6 @@ export const ROUTES = {
   EMPSIDEBARITEM: "/empsidebaritem",
   ADMIN: "/admin",
   ADMINFORM: "/adminform",
+  LOGIN: "/login",
+  SIGNUP: "/signup",
 };

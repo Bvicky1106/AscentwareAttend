@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAttendanceStore } from "../store/attendanceStore";
 
-// 🔗 Replace this with your Google Apps Script Web App URL
-const SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbz21D5tKDeXV7C_km0iSf1CH2sGlbXD12mmq04HQr__VF90l2K8_GYHyOawVn5VKtV-Tg/exec";
-
 export default function TodaySummary() {
   const {
     isCheckedIn,
@@ -19,7 +15,7 @@ export default function TodaySummary() {
 
   const [displayTime, setDisplayTime] = useState("00:00:00");
 
-  // Update elapsed time display every second
+  // 🕒 Update elapsed time display every second
   useEffect(() => {
     const interval = setInterval(() => {
       const totalSeconds = Math.floor(elapsedTime / 1000);
@@ -35,33 +31,25 @@ export default function TodaySummary() {
     return () => clearInterval(interval);
   }, [elapsedTime]);
 
-  // 📌 Function to push data into Google Sheets
-  async function submitAttendance(data) {
-    try {
-      await fetch(SHEET_URL, {
-        method: "POST",
-        mode: "no-cors", // required for Google Apps Script
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      console.log("✅ Submitted to Google Sheets:", data);
-    } catch (error) {
-      console.error("❌ Error submitting:", error);
-    }
-  }
-
-  // 📌 Handle Check Out
+  // 🟢 Handle Check Out (no data sent externally)
   const handleCheckOut = () => {
-    submitAttendance({
+    const data = {
       startTime: startTime ? new Date(startTime).toLocaleTimeString() : "--:--",
       endTime: new Date().toLocaleTimeString(),
       elapsedTime: displayTime,
       breakCount,
-    });
+    };
+
+    console.log("✅ Local Attendance Record:", data);
     checkOut();
   };
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+    const s = String(totalSec % 60).padStart(2, "0");
+    return `${h}:${m}:${s}`;
+  }
 
   return (
     <div className="w-full rounded-xl p-3 font-sans bg-white shadow-md">
@@ -80,7 +68,7 @@ export default function TodaySummary() {
             <div className="absolute inset-0 rounded-full bg-white/50 mix-blend-screen"></div>
             <div className="absolute inset-[18%] rounded-full bg-gradient-to-br from-green-400 to-green-600 flex flex-col items-center justify-center shadow-inner">
               <div className="text-black font-bold text-2xl md:text-3xl">
-                {displayTime}
+                {formatTime(elapsedTime)} {isOnBreak}
               </div>
               <div className="text-green-800 font-bold text-sm mt-1">
                 {isOnBreak ? "On Break" : "Working"}
@@ -155,7 +143,7 @@ export default function TodaySummary() {
           <h3 className="text-lg">Breaks</h3>
           <span className="block text-xl md:text-2xl mt-1">{breakCount}</span>
         </div>
-        <div className="bg-gradient-to-br from-teal-300 to-green-100 text-green-800 rounded-xl p-4 text-center font-bold hover:shadow-xl transition">
+        <div className="bg-gradient-to-br from-green-400 to-green-200  text-green-800 rounded-xl p-4 text-center font-bold hover:shadow-xl transition">
           <h3 className="text-lg">OT Hours</h3>
           <span className="block text-xl md:text-2xl mt-1">--:--</span>
         </div>

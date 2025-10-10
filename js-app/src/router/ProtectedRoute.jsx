@@ -1,12 +1,8 @@
-// import { Navigate } from "react-router-dom";
-// import { useAuthStore } from "../hooks/useAuthStore";
+// src/components/ProtectedRoute.jsx
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
-// export default function ProtectedRoute({ children }) {
-//   const { user } = useAuthStore();
-
-//   if (!user) {
-//     return <Navigate to="/login" replace />;
-//   }
-
-//   return children;
-// }
+export default function ProtectedRoute() {
+  const token = localStorage.getItem("token");
+  return token ? <Outlet /> : <Navigate to="/" replace />;
+}

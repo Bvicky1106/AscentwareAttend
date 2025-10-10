@@ -1,4 +1,18 @@
+import { useEffect, useState } from "react";
+
 export default function EmployeeDetails() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    // Get name and email from localStorage after login
+    const storedName = localStorage.getItem("name") || "Employee";
+    const storedEmail = localStorage.getItem("email") || "example@mail.com";
+
+    setName(storedName);
+    setEmail(storedEmail);
+  }, []);
+
   return (
     <div className="flex justify-center items-start h-full w-full p-8">
       <div className="rounded-xl text-center flex flex-col items-center justify-center font-sans text-sm w-full max-w-sm shadow-md p-4 bg-white">
@@ -19,7 +33,10 @@ export default function EmployeeDetails() {
         {/* Employee Info */}
         <div className="text-left w-full px-4 space-y-1 text-lg">
           <p>
-            <span className="font-semibold">Name:</span> Vignesh
+            <span className="font-semibold">Name:</span> {name}
+          </p>
+          <p>
+            <span className="font-semibold">Email:</span> {email}
           </p>
           <p>
             <span className="font-semibold">Role:</span> Software Engineer

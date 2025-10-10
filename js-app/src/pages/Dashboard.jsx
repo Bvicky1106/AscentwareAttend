@@ -1,5 +1,6 @@
-import { useState } from "react";
-import Calendar from "../components/Calendar";
+import { useState, useEffect } from "react";
+import { useAttendanceStore } from "../store/attendanceStore";
+
 import EmployeeDetails from "../components/EmployeeDetails";
 import TodaySummary from "../components/TodaySummary";
 import BreakTime from "../components/BreakTime";
@@ -8,11 +9,18 @@ import EmpSidebar from "../components/sidebar/EmpSidebar";
 import WeeklyStatusChart from "../components/WeeklyStatusChart";
 import Admin from "../components/admin/Admin";
 import { ROUTES } from "../constants/routes";
-import CalendarGrid from "../components/CalendarGrid";
+import CalendarGrid from "../components/calendar/CalendarGrid";
 
 export default function Dashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activePage, setActivePage] = useState(ROUTES.DASHBOARD); // ✅ control content
+  // Sidebar state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activePage, setActivePage] = useState(ROUTES.DASHBOARD);
+
+  // Resume attendance timer after page refresh
+  const resumeTimer = useAttendanceStore((state) => state.resumeTimer);
+  useEffect(() => {
+    resumeTimer();
+  }, [resumeTimer]);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -30,7 +38,7 @@ export default function Dashboard() {
         >
           <EmpSidebar
             isOpen={isSidebarOpen}
-            onNavigate={setActivePage} // ✅ update active page
+            onNavigate={setActivePage}
             activePage={activePage}
           />
         </div>
@@ -42,69 +50,99 @@ export default function Dashboard() {
           }`}
         >
           <main className="grid grid-cols-8 gap-6">
-            {activePage === ROUTES.DASHBOARD && (
-              <>
-                <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
-                  <EmployeeDetails />
-                </div>
-                <div className="col-span-2 bg-white p-4 rounded-xl shadow-md">
-                  <BreakTime />
-                </div>
-                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-                  <TodaySummary />
-                </div>
-                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-                  <WeeklyStatusChart />
-                </div>
-                <div className="col-span-4 bg-white p-6 rounded-xl shadow-md">
-                  <CalendarGrid />
-                </div>
-              </>
-            )}
+            {/* Dashboard Components */}
+            <div
+              className={`col-span-2 bg-white p-4 rounded-xl shadow-md ${
+                activePage === ROUTES.DASHBOARD ? "" : "hidden"
+              }`}
+            >
+              <EmployeeDetails />
+            </div>
 
-            {activePage === ROUTES.CALENDARGRID && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold">
-                  <CalendarGrid />
-                </h2>
-              </div>
-            )}
+            <div
+              className={`col-span-2 bg-white p-4 rounded-xl shadow-md ${
+                activePage === ROUTES.DASHBOARD ? "" : "hidden"
+              }`}
+            >
+              <BreakTime />
+            </div>
 
-            {activePage === ROUTES.ADMIN && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <Admin />
-              </div>
-            )}
+            <div
+              className={`col-span-4 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.DASHBOARD ? "" : "hidden"
+              }`}
+            >
+              <TodaySummary />
+            </div>
 
-            {activePage === ROUTES.LEAVE && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold">Leave Request Page</h2>
-              </div>
-            )}
+            <div
+              className={`col-span-4 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.DASHBOARD ? "" : "hidden"
+              }`}
+            >
+              <WeeklyStatusChart />
+            </div>
 
-            {activePage === ROUTES.CORRECTION && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold">
-                  Corrections Request Page
-                </h2>
-              </div>
-            )}
+            <div
+              className={`col-span-4 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.DASHBOARD ? "" : "hidden"
+              }`}
+            >
+              <CalendarGrid />
+            </div>
 
-            {activePage === ROUTES.PERMISSION && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold">
-                  Permission Request Page
-                </h2>
-              </div>
-            )}
+            {/* Other Pages */}
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.CALENDARGRID ? "" : "hidden"
+              }`}
+            >
+              <CalendarGrid />
+            </div>
 
-            {activePage === ROUTES.RESET && (
-              <div className="col-span-8 bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold">
-                  Check-in Reset Request Page
-                </h2>
-              </div>
-            )}
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.ADMIN ? "" : "hidden"
+              }`}
+            >
+              <Admin />
+            </div>
+
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.LEAVE ? "" : "hidden"
+              }`}
+            >
+              <h2 className="text-xl font-semibold">Leave Request Page</h2>
+            </div>
+
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.CORRECTION ? "" : "hidden"
+              }`}
+            >
+              <h2 className="text-xl font-semibold">
+                Corrections Request Page
+              </h2>
+            </div>
+
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.PERMISSION ? "" : "hidden"
+              }`}
+            >
+              <h2 className="text-xl font-semibold">Permission Request Page</h2>
+            </div>
+
+            <div
+              className={`col-span-8 bg-white p-6 rounded-xl shadow-md ${
+                activePage === ROUTES.RESET ? "" : "hidden"
+              }`}
+            >
+              <h2 className="text-xl font-semibold">
+                Check-in Reset Request Page
+              </h2>
+            </div>
           </main>
         </div>
       </div>

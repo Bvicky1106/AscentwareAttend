@@ -1,4 +1,3 @@
-// src/store/attendanceStore.js
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
@@ -6,6 +5,7 @@ import axios from "axios";
 export const useAttendanceStore = create(
   persist(
     (set, get) => ({
+      // ✅ STATE
       isCheckedIn: false,
       startTime: null,
       elapsedTime: 0,
@@ -15,16 +15,21 @@ export const useAttendanceStore = create(
       breakStart: null,
       breakElapsed: 0,
 
+      // ✅ CHECK-IN
       checkIn: () => {
         if (get().isCheckedIn) return;
 
         const now = Date.now();
         const interval = setInterval(() => {
-          if (!get().isOnBreak) {
-            const workedTime =
-              Date.now() - get().startTime - get().breakElapsed;
-            set({ elapsedTime: workedTime });
+          const nowTime = Date.now();
+          let workedTime = nowTime - get().startTime - get().breakElapsed;
+
+          if (get().isOnBreak && get().breakStart) {
+            const breakTime = nowTime - get().breakStart;
+            workedTime -= breakTime;
           }
+
+          set({ elapsedTime: workedTime });
         }, 1000);
 
         set({
@@ -39,6 +44,7 @@ export const useAttendanceStore = create(
         });
       },
 
+      // ✅ CHECK-OUT
       checkOut: async () => {
         const {
           startTime,
@@ -51,27 +57,25 @@ export const useAttendanceStore = create(
 
         if (!isCheckedIn) return;
 
-        // Stop timer
         if (timerInterval) clearInterval(timerInterval);
 
         try {
-          // Prepare data for backend
+          const username = localStorage.getItem("name") || "unknown";
+
           const data = {
             startTime: new Date(startTime).toISOString(),
             endTime: new Date().toISOString(),
             workedDuration: Math.floor(elapsedTime / 1000), // seconds
             breakCount,
             totalBreakDuration: Math.floor(breakElapsed / 1000),
+            username,
           };
 
-          // Send to NestJS backend
           await axios.post("http://localhost:8000/attendance", data);
-          console.log("✅ Attendance data sent successfully", data);
         } catch (error) {
-          console.error("❌ Error sending attendance data:", error);
+          console.error("Attendance check-out failed:", error);
         }
 
-        // Reset local state
         set({
           isCheckedIn: false,
           startTime: null,
@@ -84,6 +88,7 @@ export const useAttendanceStore = create(
         });
       },
 
+      // ✅ TOGGLE BREAK
       toggleBreak: () => {
         if (!get().isCheckedIn) return;
 
@@ -104,6 +109,7 @@ export const useAttendanceStore = create(
         }
       },
 
+      // ✅ RESET ATTENDANCE
       reset: () => {
         if (get().timerInterval) clearInterval(get().timerInterval);
         set({
@@ -118,15 +124,23 @@ export const useAttendanceStore = create(
         });
       },
 
+      // ✅ RESUME TIMER (AFTER PAGE REFRESH)
       resumeTimer: () => {
         if (!get().isCheckedIn) return;
 
+        // Clear any existing interval
+        if (get().timerInterval) clearInterval(get().timerInterval);
+
         const interval = setInterval(() => {
-          if (!get().isOnBreak) {
-            const workedTime =
-              Date.now() - get().startTime - get().breakElapsed;
-            set({ elapsedTime: workedTime });
+          const now = Date.now();
+          let workedTime = now - get().startTime - get().breakElapsed;
+
+          if (get().isOnBreak && get().breakStart) {
+            const breakTime = now - get().breakStart;
+            workedTime -= breakTime;
           }
+
+          set({ elapsedTime: workedTime });
         }, 1000);
 
         set({ timerInterval: interval });

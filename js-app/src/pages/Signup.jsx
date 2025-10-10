@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
-import LoginForm from "./LoginForm";
-import DialogBox from "./DialogBox";
-import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import SignupForm from "../pages/SignupForm";
+import DialogBox from "../pages/Login/DialogBox";
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ Email: "", Password: "" });
+  const [formData, setFormData] = useState({
+    Name: "",
+    Email: "",
+    Password: "",
+  });
   const [dialog, setDialog] = useState({ isOpen: false, message: "" });
 
   // Redirect if already logged in
@@ -16,27 +20,21 @@ export default function Login() {
     if (token) navigate("/dashboard");
   }, [navigate]);
 
-  // Login mutation
-  const loginMutation = useMutation({
+  const signupMutation = useMutation({
     mutationFn: async (data) => {
-      const res = await axios.post("http://localhost:8000/auth/login", {
+      const res = await axios.post("http://localhost:8000/auth/signup", {
+        name: data.Name,
         email: data.Email,
         password: data.Password,
       });
-      return res.data; // { access_token, user: { id, email, name, password } }
+      return res.data;
     },
-    onSuccess: (data) => {
-      // Store token and user info
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("name", data.user.name);
-      localStorage.setItem("email", data.user.email);
-
-      setDialog({ isOpen: true, message: "Login successful!" });
-      setFormData({ Email: "", Password: "" });
-      setTimeout(() => navigate("/dashboard"), 1000);
+    onSuccess: () => {
+      setDialog({ isOpen: true, message: "Signup successful! Redirecting..." });
+      setTimeout(() => navigate("/"), 1000);
     },
     onError: () =>
-      setDialog({ isOpen: true, message: "Login failed. Please try again." }),
+      setDialog({ isOpen: true, message: "Signup failed. Please try again." }),
   });
 
   const handleChange = (e) => {
@@ -46,12 +44,12 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    loginMutation.mutate(formData);
+    signupMutation.mutate(formData);
   };
 
   return (
     <>
-      <LoginForm
+      <SignupForm
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         formData={formData}
