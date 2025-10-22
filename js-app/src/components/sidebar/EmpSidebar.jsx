@@ -43,16 +43,12 @@ const EmpSidebar = ({ isOpen, onNavigate, activePage }) => {
       <EmpSidebarItem
         icon={<FaTable />}
         label="Admin"
-        onClick={() => onNavigate(ROUTES.ADMIN)}
         active={activePage === ROUTES.ADMIN}
       />
 
       {/* Permission Dropdown */}
       <div className="mx-2 mt-3">
-        <button
-          className="w-full flex items-center justify-between bg-[#023e8a] px-4 py-3 rounded-lg text-lg font-semibold hover:bg-[#0353a4] transition"
-          onClick={() => setOpenPermission(!openPermission)}
-        >
+        <button className="w-full flex items-center justify-between bg-[#023e8a] px-4 py-3 rounded-lg text-lg font-semibold hover:bg-[#0353a4] transition">
           <span className="flex items-center gap-2">
             <FaUserShield /> Permission
           </span>

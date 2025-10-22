@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Logo from "../assets/logo.png";
 
 export default function EmployeeDetails() {
   const [name, setName] = useState("");
@@ -14,37 +15,35 @@ export default function EmployeeDetails() {
   }, []);
 
   return (
-    <div className="flex justify-center items-start h-full w-full p-8">
-      <div className="rounded-xl text-center flex flex-col items-center justify-center font-sans text-sm w-full max-w-sm shadow-md p-4 bg-white">
-        {/* Header */}
-        <h2 className="text-2xl font-bold text-blue-600 mb-4 tracking-wide">
-          Employee Details
-        </h2>
+    <div className="flex flex-col items-center justify-start h-full w-full py-8">
+      {/* Header */}
+      <h2 className="text-2xl font-bold text-blue-600 tracking-wide mb-6">
+        Employee Details
+      </h2>
 
-        {/* Profile Image */}
-        <div className="w-20 h-20 rounded-full bg-orange-500 flex justify-center items-center mb-4">
-          <img
-            src="/profile.png" // replace with actual image
-            alt="Employee"
-            className="w-12 h-12 rounded-full"
-          />
-        </div>
+      {/* Profile Image */}
+      <div className="w-50 h-50 rounded-full bg-[#0b2c5d] flex justify-center items-center mb-6 shadow-md">
+        <img
+          src={Logo}
+          alt="Company Logo"
+          className="w-50 h-50 object-contain rounded-full"
+        />
+      </div>
 
-        {/* Employee Info */}
-        <div className="text-left w-full px-4 space-y-1 text-lg">
-          <p>
-            <span className="font-semibold">Name:</span> {name}
-          </p>
-          <p>
-            <span className="font-semibold">Email:</span> {email}
-          </p>
-          <p>
-            <span className="font-semibold">Role:</span> Software Engineer
-          </p>
-          <p>
-            <span className="font-semibold">Employee ID:</span> EMP123
-          </p>
-        </div>
+      {/* Employee Info */}
+      <div className="text-left w-full max-w-lg px-4 space-y-2 text-2xl leading-relaxed">
+        <p>
+          <span className="font-bold">Name:</span> {name}
+        </p>
+        <p>
+          <span className="font-bold">Email:</span> {email}
+        </p>
+        <p>
+          <span className="font-bold">Role:</span> Software Engineer
+        </p>
+        <p>
+          <span className="font-bold">Employee ID:</span> EMP123
+        </p>
       </div>
     </div>
   );
