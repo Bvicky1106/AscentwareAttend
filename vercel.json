@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "projects": [
+    {
+      "rootDirectory": "js-app"
+    }
+  ],
   "builds": [
     {
       "src": "js-app/package.json",
