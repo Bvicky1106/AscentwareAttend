@@ -1,16 +1,11 @@
 {
   "version": 2,
-  "projects": [
-    {
-      "rootDirectory": "js-app"
-    }
-  ],
   "builds": [
     {
       "src": "js-app/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "js-app/dist" }
+      "config": { "distDir": "dist" }
     }
   ],
-  "routes": [{ "src": "/(.*)", "dest": "js-app/dist/$1" }]
+  "routes": [{ "src": "/(.*)", "dest": "/$1" }]
 }
