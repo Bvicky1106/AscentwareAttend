@@ -19,8 +19,14 @@ export default function Navbar({ onToggleSidebar }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear(); // clear all stored data
-    navigate("/"); // go to login page
+    // 🕒 If user is still checked in, check them out first
+    if (isCheckedIn) {
+      checkOut();
+    }
+
+    // 🧹 Clear local storage and navigate away
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
