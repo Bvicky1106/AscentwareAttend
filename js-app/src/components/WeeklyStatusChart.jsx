@@ -99,7 +99,7 @@ export default function WeeklyStatusChart() {
             isDateInCurrentWeek(entry.startTime)
         );
 
-        // Initialize chart data
+        // Initialize week data
         const weekData = {
           Mon: { workedDuration: 0, breakCount: 0 },
           Tue: { workedDuration: 0, breakCount: 0 },
@@ -110,22 +110,43 @@ export default function WeeklyStatusChart() {
           Sun: { workedDuration: 0, breakCount: 0 },
         };
 
-        // Aggregate worked hours and break count
+        // Group entries by date
+        const groupedByDate = {};
         userData.forEach((entry) => {
-          const start = new Date(entry.startTime);
-          const weekday = start.toLocaleDateString("en-US", {
-            weekday: "short",
-          });
-
-          const workedHours =
-            entry.workedDuration > 1000
-              ? entry.workedDuration / 3600000
-              : entry.workedDuration / 60;
-
-          weekData[weekday].workedDuration += workedHours;
-          weekData[weekday].breakCount += entry.breakCount || 0;
+          const dateKey = new Date(entry.startTime).toDateString();
+          if (!groupedByDate[dateKey]) groupedByDate[dateKey] = [];
+          groupedByDate[dateKey].push(entry);
         });
 
+        // For each day, use first check-in and last check-out
+        Object.keys(groupedByDate).forEach((dateKey) => {
+          const entries = groupedByDate[dateKey].sort(
+            (a, b) => new Date(a.startTime) - new Date(b.startTime)
+          );
+
+          const firstCheckIn = entries[0];
+          const lastCheckOut = entries
+            .filter((e) => e.endTime)
+            .sort((a, b) => new Date(b.endTime) - new Date(a.endTime))[0];
+
+          if (firstCheckIn && lastCheckOut) {
+            const weekday = new Date(firstCheckIn.startTime).toLocaleDateString(
+              "en-US",
+              { weekday: "short" }
+            );
+
+            // ✅ Take workedDuration (in seconds) from lastCheckOut only
+            const workedHours = (lastCheckOut.workedDuration || 0) / 3600;
+
+            weekData[weekday].workedDuration = workedHours;
+            weekData[weekday].breakCount = entries.reduce(
+              (sum, e) => sum + (e.breakCount || 0),
+              0
+            );
+          }
+        });
+
+        // Convert to chart-friendly array
         const chartData = Object.keys(weekData).map((day) => ({
           day,
           ...weekData[day],
@@ -165,31 +186,24 @@ export default function WeeklyStatusChart() {
               ticks={[0, 2, 4, 6, 8, 10, 12, 14]}
               interval={0}
               allowDataOverflow
-              allowDecimals={false}
-              tick={{ fill: "#374151", fontSize: 18, fontWeight: "bold" }}
+              allowDecimals={true}
+              tick={{ fill: "#374151", fontSize: 14, fontWeight: "bold" }}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize: "18px" }} />
+            <Legend wrapperStyle={{ fontSize: "14px" }} />
 
             <Bar dataKey="workedDuration" radius={[6, 6, 0, 0]}>
               {data.map((entry, index) => {
-                const today = new Date().toLocaleDateString("en-US", {
-                  weekday: "short",
-                });
                 const isWeekend = entry.day === "Sat" || entry.day === "Sun";
 
-                let fillColor = WEEKDAY_BLUE;
+                let fillColor;
 
                 if (isWeekend) {
-                  fillColor =
-                    entry.day === today ? WEEKDAY_BLUE : WEEKEND_YELLOW;
-                } else if (entry.workedDuration === 0 && entry.day !== today) {
-                  fillColor = INACTIVE_GRAY;
+                  fillColor = WEEKEND_YELLOW; // always yellow for Sat & Sun
+                } else if (entry.workedDuration === 0) {
+                  fillColor = INACTIVE_GRAY; // no work done
                 } else {
-                  fillColor =
-                    entry.workedDuration > 0 || entry.day === today
-                      ? WEEKDAY_BLUE
-                      : NOT_CHECKED_RED;
+                  fillColor = WEEKDAY_BLUE; // worked hours
                 }
 
                 return <Cell key={`bar-${index}`} fill={fillColor} />;
