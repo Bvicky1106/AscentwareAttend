@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx --no-install vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "preview:mock": "cross-env VITE_USE_MOCK=true vite preview",
     "lint": "npm run test:format && npm run test:types && npm run test:lint",
