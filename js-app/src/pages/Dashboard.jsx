@@ -43,11 +43,11 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <div
-          className={`flex-1 transition-all duration-300 overflow-auto p-4 flex justify-center ${
+          className={`flex-1 transition-all duration-300 flex justify- p-4  ${
             isSidebarOpen ? "ml-64" : "ml-0"
           }`}
         >
-          <div className="w-full max-w-[1600px] flex flex-col items-center gap-6">
+          <div className="w-full max-w-[1600px] flex flex-col  gap-6">
             {activePage === ROUTES.DASHBOARD && (
               <div className="grid grid-cols-12 gap-6 w-[96%]">
                 {/* Top Row */}
