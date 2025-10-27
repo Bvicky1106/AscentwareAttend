@@ -20,7 +20,7 @@ export default function Dashboard() {
   }, [resumeTimer]);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 ">
       {/* Header Navbar */}
       <header className="w-full fixed top-0 left-0 z-50 shadow-md bg-white">
         <Navbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />

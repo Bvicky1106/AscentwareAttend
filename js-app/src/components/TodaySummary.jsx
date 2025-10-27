@@ -93,7 +93,7 @@ export default function TodaySummary() {
 
           <div className="flex justify-between text-center">
             <div className="flex flex-col items-center gap-1 w-1/2">
-              <span className="text-green-700 font-semibold text-xl sm:text-2xl md:text-3xl">
+              <span className="text-green-700 font-bold text-xl sm:text-2xl md:text-3xl">
                 {startTime ? new Date(startTime).toLocaleTimeString() : "--:--"}
               </span>
               <span className="text-gray-700 text-sm sm:text-base md:text-lg">
@@ -101,7 +101,7 @@ export default function TodaySummary() {
               </span>
             </div>
             <div className="flex flex-col items-center gap-1 w-1/2">
-              <span className="text-red-700 font-semibold text-xl sm:text-2xl md:text-3xl">
+              <span className="text-red-700 font-bold text-xl sm:text-2xl md:text-3xl">
                 {isCheckedIn ? "Now" : "--:--"}
               </span>
               <span className="text-gray-700 text-sm sm:text-base md:text-lg">
