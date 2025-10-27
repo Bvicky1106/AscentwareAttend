@@ -107,7 +107,7 @@ export default function EmployeePopup({ record, onClose }) {
 
               <div className="bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 rounded-lg p-3 shadow-md">
                 <span className="block text-gray-700 text-base">
-                  Total Break
+                  Total Break Time
                 </span>
                 <strong className="block text-gray-900 font-medium">
                   {secToHHMMSS(totalBreakDuration)}

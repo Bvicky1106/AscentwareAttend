@@ -34,7 +34,7 @@ export default function BreakTime() {
       <div className=" rounded-2xl p-2 flex flex-col gap-6">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-blue-600">
+          <h2 className="text-2xl font-bold text-blue-600">
             Break Time & Counts
           </h2>
           <button
@@ -50,12 +50,18 @@ export default function BreakTime() {
           {/* Break Info Card */}
           <div className="p-6 rounded-xl bg-green-300 shadow flex flex-col gap-3">
             <div className="flex justify-between">
-              <span className="text-gray-700 font-medium">Break Count</span>
-              <span className="text-blue-600 font-bold">{breakCount}</span>
+              <span className="text-gray-700 text-xl font-bold">
+                Break Count
+              </span>
+              <span className="text-blue-600 text-2xl font-bold">
+                {breakCount}
+              </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-700 font-medium">Current Break</span>
-              <span className="text-blue-600 font-bold">
+              <span className="text-gray-700 text-xl font-bold">
+                Current Break
+              </span>
+              <span className="text-blue-600 text-2xl font-bold">
                 {formatTime(breakTime)}
               </span>
             </div>
@@ -64,13 +70,16 @@ export default function BreakTime() {
           {/* Work Info Card */}
           <div className="p-6 rounded-xl bg-green-300 shadow flex flex-col gap-3">
             <div className="flex justify-between">
-              <span className="text-gray-700 font-medium">Total Work Time</span>
-              <span className="text-blue-600 font-bold">
+              <span className="text-gray-700 text-xl font-bold">
+                Total
+                <br /> Work Time
+              </span>
+              <span className="text-blue-600 text-2xl font-bold">
                 {formatTime(elapsedTime)}
               </span>
             </div>
             <p
-              className={`text-center font-bold mt-2 ${
+              className={`text-center text-xl font-bold mt-2 ${
                 isOnBreak ? "text-red-500" : "text-green-600"
               }`}
             >
@@ -83,7 +92,7 @@ export default function BreakTime() {
         <button
           onClick={toggleBreak}
           disabled={!isCheckedIn}
-          className={`w-full py-3 rounded-xl font-bold text-white transition ${
+          className={`w-full py-3 rounded-xl font-bold text-lg text-white transition ${
             isOnBreak
               ? "bg-blue-500 hover:bg-blue-600"
               : "bg-orange-600 hover:bg-orange-700"

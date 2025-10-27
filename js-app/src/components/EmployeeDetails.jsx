@@ -31,7 +31,7 @@ export default function EmployeeDetails() {
       </div>
 
       {/* Employee Info */}
-      <div className="text-left w-full max-w-lg px-4 space-y-2 text-2xl leading-relaxed">
+      <div className="text-left w-full max-w-lg px-4 space-y-2 text-xl leading-relaxed">
         <p>
           <span className="font-bold">Name:</span> {name}
         </p>
